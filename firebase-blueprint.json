@@ -1,0 +1,107 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user profile verified via phone number authentication.",
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "string",
+          "description": "Verified E.164 phone number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastBackupAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the most recent backup"
+        }
+      },
+      "required": ["phoneNumber", "createdAt"]
+    },
+    "Contact": {
+      "title": "Contact",
+      "description": "A phone contact entity backed up in the vault.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "group": { "type": "string", "enum": ["Family", "Work", "Friends", "Other"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "phone"]
+    },
+    "SMSMessage": {
+      "title": "SMSMessage",
+      "description": "A text message log.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "contactName": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "type": { "type": "string", "enum": ["incoming", "outgoing"] }
+      },
+      "required": ["id", "contactName", "contactPhone", "message", "timestamp", "type"]
+    },
+    "VaultFile": {
+      "title": "VaultFile",
+      "description": "Metadata and encrypted/base64 payload of a backed up file.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "size": { "type": "integer" },
+        "type": { "type": "string" },
+        "dataUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "size", "type"]
+    },
+    "SecureNote": {
+      "title": "SecureNote",
+      "description": "An encrypted text note locked behind a personal vault PIN.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "isLocked": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "content", "isLocked"]
+    },
+    "BackupSnapshot": {
+      "title": "BackupSnapshot",
+      "description": "A full, structured archive of device data.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "deviceName": { "type": "string" },
+        "contacts": { "type": "array" },
+        "messages": { "type": "array" },
+        "files": { "type": "array" },
+        "notes": { "type": "array" },
+        "totalSize": { "type": "integer" },
+        "version": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "deviceName", "contacts", "messages", "files", "notes", "totalSize"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Core profile of the authenticated phone vault account."
+    },
+    "/users/{userId}/backups/{backupId}": {
+      "schema": "BackupSnapshot",
+      "description": "Historical, secure snapshots created by the user."
+    }
+  }
+}

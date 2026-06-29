@@ -1,0 +1,6 @@
+{
+  "name": "Phone Vault Backup",
+  "description": "Phone number based login + data backup and restore application for contacts, files, messages, and secure notes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
